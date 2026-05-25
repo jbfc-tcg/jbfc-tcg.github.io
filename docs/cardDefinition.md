@@ -47,7 +47,7 @@
 - effect id는 `src/data/cardEffects.ts`에 등록된 값과 일치해야 한다.
 - `effectThemeId`가 없으면 `basic`을 기본값으로 사용한다.
 - Theme Lab Page에서는 query string의 `effect` 값이 우선하며, 카드 기본 효과를 바꾸지 않는다.
-- 현재 기본 매핑은 basic 카드 `basic`, Goal of the Month `trainer-gallery-holo`, Best Celebration `regular-holo`다.
+- 현재 기본 매핑은 basic 카드 `basic`, Goal of the Month `trainer-gallery-holo`, Best Celebration `v-full-art`다.
 
 ## Stat Modifier 규칙
 
