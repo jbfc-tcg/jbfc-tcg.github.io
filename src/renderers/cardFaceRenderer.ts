@@ -61,6 +61,7 @@ async function captureCardFace(
 
   try {
     await tick()
+    await document.fonts?.ready
     await waitForImages(stage)
     await nextFrame()
 
