@@ -1,0 +1,397 @@
+@import './vendor/pokemon-cards-css/cards.css';
+@import './vendor/pokemon-cards-css/cards/base.css';
+@import './vendor/pokemon-cards-css/cards/basic.css';
+@import './vendor/pokemon-cards-css/cards/reverse-holo.css';
+@import './vendor/pokemon-cards-css/cards/regular-holo.css';
+@import './vendor/pokemon-cards-css/cards/cosmos-holo.css';
+@import './vendor/pokemon-cards-css/cards/amazing-rare.css';
+@import './vendor/pokemon-cards-css/cards/radiant-holo.css';
+@import './vendor/pokemon-cards-css/cards/trainer-gallery-holo.css';
+@import './vendor/pokemon-cards-css/cards/v-regular.css';
+@import './vendor/pokemon-cards-css/cards/v-full-art.css';
+@import './vendor/pokemon-cards-css/cards/v-max.css';
+@import './vendor/pokemon-cards-css/cards/v-star.css';
+@import './vendor/pokemon-cards-css/cards/trainer-full-art.css';
+@import './vendor/pokemon-cards-css/cards/rainbow-holo.css';
+@import './vendor/pokemon-cards-css/cards/rainbow-alt.css';
+@import './vendor/pokemon-cards-css/cards/secret-rare.css';
+@import './vendor/pokemon-cards-css/cards/trainer-gallery-v-regular.css';
+@import './vendor/pokemon-cards-css/cards/trainer-gallery-v-max.css';
+@import './vendor/pokemon-cards-css/cards/trainer-gallery-secret-rare.css';
+@import './vendor/pokemon-cards-css/cards/shiny-rare.css';
+@import './vendor/pokemon-cards-css/cards/shiny-v.css';
+@import './vendor/pokemon-cards-css/cards/shiny-vmax.css';
+
+.card.card-shell {
+  --card-aspect: 63 / 88;
+  --card-radius: 6% / 4.3%;
+  --card-edge: var(--card-accent);
+  --card-glow: var(--card-foil);
+  width: min(100%, 390px);
+  aspect-ratio: 63 / 88;
+  pointer-events: none;
+  border-radius: var(--card-radius);
+  filter: none;
+}
+
+.card.card-shell.expanded {
+  filter: none;
+}
+
+.card.card-shell.interaction-disabled .card__rotator {
+  pointer-events: none;
+}
+
+.card.card-shell:focus-visible {
+  outline: none;
+}
+
+.card.card-shell .card__translater {
+  width: 100%;
+}
+
+.card.card-shell .card__rotator {
+  width: 100%;
+  border: none;
+  border-radius: var(--card-radius);
+  background: transparent;
+  outline: none;
+  padding: 0;
+}
+
+.card.card-shell .card__rotator,
+.card.card-shell .card__rotator * {
+  outline: none;
+}
+
+.card.card-shell .card__rotator:focus-visible {
+  outline: none;
+}
+
+.card.card-shell .card__rotator,
+.card.card-shell.active .card__rotator:focus {
+  box-shadow:
+    0 28px 48px -24px rgba(0, 0, 0, 0.82),
+    0 10px 20px -5px black,
+    0 2px 15px -5px black;
+}
+
+.card.card-shell.active .card__rotator,
+.card.card-shell .card__rotator:focus {
+  box-shadow:
+    0 34px 58px -26px rgba(0, 0, 0, 0.88),
+    0 14px 28px -8px rgba(0, 0, 0, 0.88),
+    0 4px 18px -8px rgba(0, 0, 0, 0.8);
+}
+
+.card.card-shell .card__front,
+.card.card-shell .card__shine,
+.card.card-shell .card__glare {
+  border-radius: var(--card-radius);
+}
+
+.card.card-shell .card__front {
+  background: transparent;
+}
+
+.card.card-shell.back-visible .card__shine,
+.card.card-shell.back-visible .card__shine::before,
+.card.card-shell.back-visible .card__shine::after,
+.card.card-shell.back-visible .card__glare,
+.card.card-shell.back-visible .card__glare::before,
+.card.card-shell.back-visible .card__glare::after {
+  visibility: hidden;
+  opacity: 0 !important;
+}
+
+.card.card-shell .jbfc-card-back {
+  position: relative;
+  display: grid;
+  grid-area: 1 / 1;
+  width: 100%;
+  aspect-ratio: 63 / 88;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(183, 247, 0, 0.18), transparent 9rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), transparent 28%),
+    linear-gradient(160deg, #002e1c, #00160d 62%, #000905);
+  box-shadow:
+    inset 0 0 0 10px var(--jb-green),
+    inset 0 0 0 12px rgba(183, 247, 0, 0.16),
+    inset 0 0 46px rgba(0, 0, 0, 0.64);
+  transform: rotateY(180deg) translateZ(1px);
+  backface-visibility: hidden;
+}
+
+.card.card-shell .jbfc-card-back * {
+  width: auto;
+  display: revert;
+  grid-area: auto;
+  aspect-ratio: auto;
+  border-radius: 0;
+  image-rendering: auto;
+  transform-style: flat;
+  overflow: visible;
+}
+
+.jbfc-card-back__pattern {
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(183, 247, 0, 0.22);
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, rgba(183, 247, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(183, 247, 0, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(255, 210, 0, 0.12), transparent 12rem);
+  background-size:
+    24px 24px,
+    24px 24px,
+    auto;
+  opacity: 0.72;
+}
+
+.card.card-shell .jbfc-card-back__mark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(48%, 14rem);
+  max-width: calc(100% - 48px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.card.card-shell .jbfc-card-back__mark img {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: translate3d(0, 0, 0.01px);
+}
+
+.card.card-shell .jbfc-card-back__mark img.loaded {
+  opacity: 1;
+}
+
+.jbfc-card-back__fallback {
+  display: grid;
+  place-items: center;
+  color: #ffd200;
+  text-align: center;
+}
+
+.jbfc-card-back__fallback strong {
+  display: block;
+  color: #ffd200;
+  font-size: clamp(2.1rem, 8vw, 3.4rem);
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+.jbfc-card-back__fallback span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.jbfc-card-back p {
+  position: absolute;
+  right: 12%;
+  bottom: 12%;
+  left: 12%;
+  z-index: 1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.card.card-shell .card-face-image,
+.card.card-shell .card-face-placeholder {
+  width: 100%;
+  display: block;
+  grid-area: 1 / 1;
+  aspect-ratio: 63 / 88;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  object-fit: cover;
+  transform: translate3d(0, 0, 0.01px);
+}
+
+.card.card-shell .card-face-placeholder {
+  background: #002e1c;
+}
+
+.card.card-shell .card__rotator .card-video-button {
+  width: auto;
+  display: inline-flex;
+  grid-area: 1 / 1;
+  aspect-ratio: auto;
+  image-rendering: auto;
+  overflow: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 6px);
+  transform-style: flat;
+}
+
+.card.card-shell .card__rotator .card-video-button.framed-video-button {
+  right: 7.5%;
+  bottom: 8.25%;
+  min-width: 70px;
+  height: 28px;
+  border-radius: 7px;
+}
+
+.card.card-shell .card__rotator .card-video-button.full-art-video-button {
+  top: 4.45%;
+  right: 18.7%;
+  width: 6.3%;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.card.card-shell .card__rotator .card-video-button.video-art-video-button {
+  top: 50%;
+  left: 50%;
+  width: 16%;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 6px);
+}
+
+.card.card-shell .card__rotator .card-video-button * {
+  width: auto;
+  display: revert;
+  grid-area: auto;
+  aspect-ratio: auto;
+  border-radius: 0;
+  image-rendering: auto;
+  overflow: visible;
+  pointer-events: none;
+  transform-style: flat;
+}
+
+.card.card-shell .card__rotator .full-art-video-button span {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.card.card-shell .card__rotator .video-art-video-button span {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.card.card-shell .card__rotator .framed-video-button span {
+  width: 0;
+  height: 0;
+}
+
+.video-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: clamp(18px, 4vw, 56px);
+  background: rgba(0, 0, 0, 0.76);
+}
+
+.video-backdrop__close-layer {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.video-player {
+  position: relative;
+  z-index: 1;
+  width: min(960px, 100%);
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: #000;
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.62);
+}
+
+.video-player iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+}
+
+.video-player__close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 0 14px;
+  text-transform: uppercase;
+}
+
+.card.card-shell .card__shine,
+.card.card-shell .card__shine::before,
+.card.card-shell .card__shine::after,
+.card.card-shell .card__glare,
+.card.card-shell .card__glare::before,
+.card.card-shell .card__glare::after {
+  pointer-events: none;
+}
+
+.card.card-shell[data-effect='basic'] .card__shine {
+  background: transparent;
+  opacity: 0;
+}
+
+@media (max-width: 880px) {
+  .card.card-shell {
+    width: min(92vw, 370px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card.card-shell {
+    transform: translate3d(0, 0, 0.01px) !important;
+  }
+
+  .card.card-shell .card__translater {
+    transform: translate3d(var(--translate-x), var(--translate-y), var(--translate-z))
+      scale(var(--card-scale)) !important;
+  }
+
+  .card.card-shell .card__rotator {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "2026-lee-seungwoo-10",
+  "season": 2026,
+  "playerName": "이승우",
+  "playerNameEn": "LEE SEUNGWOO",
+  "title": "Jeonbuk Forward",
+  "seasonOrEra": "2026 Season",
+  "kitNumber": 10,
+  "position": "FW",
+  "country": "대한민국",
+  "birthDate": "1998-01-06",
+  "heightCm": 173,
+  "weightKg": 63,
+  "image": "/img/players/2026-이승우-10.png",
+  "imageAlt": "전북현대모터스FC 이승우 선수 사진",
+  "stats": {
+    "rank": 39,
+    "point": 2932,
+    "attack": 1662,
+    "pass": 600,
+    "defense": 67,
+    "defenseGoalkeeper": 25,
+    "goalkeeper": 0,
+    "etc": 578
+  },
+  "seasonRecord": {
+    "competition": "하나은행 K리그1 2026",
+    "appearances": 15,
+    "goals": 3,
+    "assists": 1,
+    "shots": 28,
+    "shotsOnTarget": 14
+  },
+  "sources": {
+    "profile": "https://api.jbfc.kr/player/20220042",
+    "dynamicPoint": "https://www.kleague.com/record/dynamicPoint.do",
+    "image": "https://jbhd-upload-file.s3.ap-northeast-2.amazonaws.com/images/player/2026/20220042_280px.png"
+  }
+}
