@@ -49,13 +49,14 @@ async function captureCardFace(
   cardMeta: CardFaceMeta,
 ) {
   await document.fonts?.ready
+  const capturePlayerImage = await inlineCaptureImage(playerImage)
 
   const { stage, wrapper } = createCaptureStage()
   document.body.appendChild(wrapper)
 
   const component = mount(faceTheme.component, {
     target: stage,
-    props: { card, effectTheme, playerImage, cardMeta },
+    props: { card, effectTheme, playerImage: capturePlayerImage, cardMeta },
   })
 
   try {
@@ -88,6 +89,38 @@ async function captureCardFace(
     await unmount(component)
     wrapper.remove()
   }
+}
+
+async function inlineCaptureImage(playerImage: CardFacePlayerImage): Promise<CardFacePlayerImage> {
+  if (playerImage.src.startsWith('data:') || playerImage.src.startsWith('blob:')) return playerImage
+
+  try {
+    const imageUrl = new URL(playerImage.src, window.location.href)
+    if (imageUrl.origin !== window.location.origin) return playerImage
+
+    const response = await fetch(imageUrl)
+    if (!response.ok) return playerImage
+
+    const dataUrl = await blobToDataUrl(await response.blob())
+    return {
+      ...playerImage,
+      src: dataUrl,
+    }
+  } catch {
+    return playerImage
+  }
+}
+
+function blobToDataUrl(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
+      if (typeof reader.result === 'string') resolve(reader.result)
+      else reject(new Error('Failed to read image blob as a data URL.'))
+    })
+    reader.addEventListener('error', () => reject(reader.error ?? new Error('Failed to read image blob.')))
+    reader.readAsDataURL(blob)
+  })
 }
 
 function createCaptureStage() {

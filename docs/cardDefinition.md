@@ -29,7 +29,7 @@
 
 - 카드별 이미지가 필요하면 `image`에 로컬 정적 에셋 경로를 넣는다.
 - DOM capture CORS 문제를 피하기 위해 외부 URL을 직접 쓰지 말고 `public/img/players` 아래에 저장한다.
-- 현재 이승우 Goal of the Month full-art 이미지는 `public/img/players/2026-이승우-10-full-art.jpg`다.
+- 현재 이승우 Goal of the Month full-art 이미지는 `public/img/players/lee-seungwoo-2026-10-full-art.jpg`다.
 - `image`가 없으면 선수 데이터의 기본 프로필 이미지를 사용한다.
 
 ## Video 규칙
