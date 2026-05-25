@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check && vite build",
+    "generate:card-faces": "node scripts/render-card-faces.mjs",
+    "build": "npm run generate:card-faces && npm run check && vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
   },
@@ -13,12 +14,11 @@
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^24.12.3",
+    "html-to-image": "^1.11.13",
+    "playwright": "^1.60.0",
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
-  },
-  "dependencies": {
-    "html-to-image": "^1.11.13"
   }
 }

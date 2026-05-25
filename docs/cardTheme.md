@@ -2,14 +2,16 @@
 
 ## 목적
 
-이 문서는 카드 face theme을 새로 추가하거나 수정할 때 따라야 할 구현 기준이다. 현재 구조는 `CardFaceTheme + Svelte DOM capture renderer + holo effect theme` 조합이다.
+이 문서는 카드 face theme을 새로 추가하거나 수정할 때 따라야 할 구현 기준이다. 현재 구조는 `CardFaceTheme + build-time Svelte DOM capture renderer + holo effect theme` 조합이다.
 
 ## 현재 구조
 
-- 카드 앞면은 Svelte component DOM으로 작성하고, 앱 실행 중 offscreen stage에서 이미지 Blob URL로 캡처한다.
+- 카드 앞면은 Svelte component DOM으로 작성하고, 빌드 시점에 offscreen stage에서 정적 PNG로 캡처한다.
 - face theme 정의는 `src/data/cardFaceThemes.ts`에서 관리한다.
 - `src/renderers/cardFaceRenderer.ts`는 face component를 mount하고 이미지로 캡처하는 범용 엔진이다.
-- `TradingCard.svelte`는 face 이미지를 보여주고, 클릭 확대/회전, pointer tilt, shine/glare 레이어만 담당한다.
+- `scripts/render-card-faces.mjs`가 `cards.json`의 모든 카드 앞면을 `public/generated/card-faces/*.png`로 생성한다.
+- `src/generated/cardFaces.ts`는 생성된 PNG 경로 매핑이며 자동 생성 파일이다.
+- `TradingCard.svelte`는 생성된 face 이미지를 보여주고, 클릭 확대/회전, pointer tilt, shine/glare 레이어만 담당한다.
 - 영상 재생 버튼은 캡처 이미지가 아니라 `TradingCard.svelte`의 live overlay로 렌더링한다.
 - face theme은 `kind: 'framed' | 'full-art'`로 종류를 구분한다.
 - 현재 face theme은 `framed-basic`, `full-art`, `video-art`다.
@@ -40,7 +42,7 @@
 5. Theme Lab Page에서 `?face={theme-id}`로 해당 face 하나만 확인한다.
 6. 필요하면 `?effect=regular-holo`, `?effect=reverse-holo`, `?effect=cosmos-holo` 등으로 효과 클립 정렬을 확인한다.
 7. 사용자와 대화하며 face component와 `imageSurface`를 반복 수정한다.
-8. 최종 확인 후 `npm run build`를 실행한다.
+8. 최종 확인 후 `npm run generate:card-faces` 또는 `npm run build`를 실행한다.
 
 ## 구현 절차
 
@@ -50,11 +52,11 @@
 4. framed 계열이면 `imageSurface`를 반드시 정의하고, `framedEffectSurface(imageSurface)`로 `effectSurface`를 만든다.
 5. full-art 계열이면 기본적으로 `inset(0 round 18px)`를 사용한다.
 6. 영상 버튼 모양을 테마별로 바꾸려면 `videoButtonComponent`에 별도 Svelte component를 등록한다.
-7. `src/renderers/cardFaceRenderer.ts`는 수정하지 않는다.
+7. `src/renderers/cardFaceRenderer.ts`는 build-time 캡처 엔진이므로 수정하지 않는다.
 8. 카드별 선수 이미지나 영상이 필요하면 `docs/cardDefinition.md`의 `image`, `video` 규칙을 따른다.
 9. 캡처 기준 크기 `900 x 1257`과 카드 비율 `63 / 88`은 유지한다.
 10. Theme Lab Page에서 대상 face를 먼저 확인한다.
-11. `npm run build`와 브라우저 확인으로 전체 카드가 모두 image face로 렌더링되는지 확인한다.
+11. `npm run build`와 브라우저 확인으로 전체 카드가 모두 생성된 image face로 렌더링되는지 확인한다.
 
 ## 좌표 기준
 
@@ -96,15 +98,18 @@ left = x / 900 * 100
 - full-art는 선수 이미지가 카드 전체 비주얼의 일부이므로 사진 프레임 clip에 의존하지 않는다.
 - full-art 선수 이미지는 stage 전체를 `object-fit: cover`, `object-position: center center`로 채우는 것을 기본으로 한다.
 
-## DOM Capture Renderer 규칙
+## Build-Time Capture Renderer 규칙
 
-- renderer는 `faceTheme.component`를 화면 밖 hidden wrapper 안의 capture stage에 mount한 뒤 `html-to-image`로 Blob URL을 만든다.
+- renderer는 `faceTheme.component`를 화면 밖 hidden wrapper 안의 capture stage에 mount한 뒤 `html-to-image`로 PNG를 만든다.
+- 생성 스크립트는 Playwright로 Vite generator page를 열어 브라우저 캡처를 수행한다.
+- 생성된 파일은 `public/generated/card-faces/{card-id}.png`에 저장한다.
+- 카드 목록, 선수 데이터, face theme을 수정한 뒤에는 `npm run generate:card-faces` 또는 `npm run build`를 실행한다.
 - renderer는 특정 face theme id, layout, 사진 좌표를 알면 안 된다.
 - 외부 이미지를 캡처하면 CORS 때문에 실패할 수 있으므로 선수 이미지는 `public/img/players`에 로컬 정적 에셋으로 둔다.
 - face component는 `playerImage.src`와 `playerImage.alt`를 사용하고, 선수 데이터의 `image`를 직접 참조하지 않는다.
 - face component CSS는 `900 x 1257` 고정 좌표를 기준으로 작성하고 `cqw`를 사용하지 않는다.
 - 긴 텍스트는 component 안에서 고정 폭, `white-space`, `overflow`, `text-overflow` 등으로 영역 안에 맞춘다.
-- 런타임 카드 안의 모든 텍스트는 캡처된 이미지의 일부가 되어야 하며, `.card__front`에 live text DOM을 다시 넣지 않는다.
+- 카드 안의 모든 텍스트는 생성된 이미지의 일부가 되어야 하며, `.card__front`에 live text DOM을 다시 넣지 않는다.
 
 ## Video Interaction 규칙
 

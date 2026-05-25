@@ -21,7 +21,7 @@
         <TradingCard
           card={tradingCard.player}
           faceTheme={tradingCard.faceTheme}
-          playerImage={tradingCard.playerImage}
+          faceImage={tradingCard.faceImage}
           cardMeta={{
             name: tradingCard.name,
             specialType: tradingCard.specialType,

@@ -7,7 +7,7 @@
 - Vite
 - Svelte
 - TypeScript
-- html-to-image
+- html-to-image + Playwright for build-time card face generation
 - 정적 배포: GitHub Pages
 
 ## 실행 방법
@@ -30,7 +30,8 @@ npm run build
 npm run preview
 ```
 
-`npm run build`는 `svelte-check`와 TypeScript 설정 검사를 먼저 수행한 뒤 정적 산출물을 `dist/`에 생성합니다.
+`npm run build`는 `cards.json`의 모든 카드 앞면을 `public/generated/card-faces/*.png`로 먼저 렌더링하고,
+`src/generated/cardFaces.ts` 매핑 파일을 갱신한 뒤 `svelte-check`, TypeScript 설정 검사, Vite 빌드를 실행합니다.
 
 ## 선수 데이터 관리
 
@@ -60,6 +61,12 @@ src/data/cards/cards.json
 
 카드는 선수, face theme, 기본 holo effect, 선택 이미지, special type, stat modifier를 연결합니다. 이미지가 비어 있으면 선수 JSON의 `image`를 사용합니다. 자세한 기준은 `docs/cardDefinition.md`를 참고합니다.
 
+선수 JSON, `cards.json`, face theme을 추가/수정한 뒤에는 다음 명령으로 카드 앞면 정적 이미지를 갱신합니다.
+
+```bash
+npm run generate:card-faces
+```
+
 ## 디자인과 테마
 
 디자인 기준은 `DESIGN.md`를 따릅니다.
@@ -70,7 +77,7 @@ src/data/cards/cards.json
 - 참고 효과: https://poke-holo.simey.me/
 - 구현 참고 저장소: https://github.com/simeydotme/pokemon-cards-css
 
-새 카드 앞면 테마는 Svelte component로 만든 뒤 `src/data/cardFaceThemes.ts`에 `component`와 effect surface를 등록합니다. `src/renderers/cardFaceRenderer.ts`는 DOM 캡처 전용 범용 엔진이므로 새 테마를 추가해도 수정하지 않습니다. 자세한 기준은 `docs/cardTheme.md`를 참고합니다.
+새 카드 앞면 테마는 Svelte component로 만든 뒤 `src/data/cardFaceThemes.ts`에 `component`와 effect surface를 등록합니다. `src/renderers/cardFaceRenderer.ts`는 build-time DOM 캡처 전용 범용 엔진이므로 새 테마를 추가해도 수정하지 않습니다. 자세한 기준은 `docs/cardTheme.md`를 참고합니다.
 
 카드 테마 추가/수정은 처음부터 Svelte face component를 직접 만들거나 수정합니다. 구현 결과는 Theme Lab Page에서 query string으로 대상 face 하나만 띄워 확인합니다.
 

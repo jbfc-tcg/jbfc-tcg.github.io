@@ -29,6 +29,7 @@
     player: fallbackCard.player,
     faceTheme: selectedFaceTheme,
     effectTheme: selectedEffect,
+    faceImage: undefined,
     playerImage: {
       src: fallbackCard.player.image,
       alt: fallbackCard.player.imageAlt,
@@ -43,7 +44,7 @@
     <TradingCard
       card={selectedCard.player}
       faceTheme={selectedCard.faceTheme}
-      playerImage={selectedCard.playerImage}
+      faceImage={selectedCard.faceImage}
       cardMeta={{
         name: selectedCard.name,
         specialType: selectedCard.specialType,

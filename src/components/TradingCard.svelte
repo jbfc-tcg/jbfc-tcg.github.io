@@ -1,13 +1,10 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
   import { spring } from 'svelte/motion'
 
   import CardBack from './CardBack.svelte'
-  import { createCardFaceImageCacheKey, renderCardFaceImage } from '../renderers/cardFaceRenderer'
   import type {
     CardEffectTheme,
     CardFaceMeta,
-    CardFacePlayerImage,
     CardFaceTheme,
     PlayerCard,
   } from '../types/card'
@@ -15,7 +12,7 @@
   export let card: PlayerCard
   export let effectTheme: CardEffectTheme
   export let faceTheme: CardFaceTheme
-  export let playerImage: CardFacePlayerImage
+  export let faceImage: string | undefined
   export let cardMeta: CardFaceMeta = {
     name: 'Basic',
     specialType: 'basic',
@@ -35,9 +32,6 @@
   let wasExpanded = false
   let interacting = false
   let isBackVisible = false
-  let mounted = false
-  let renderKey = ''
-  let renderedKey = ''
   let faceImageUrl = ''
   let faceImageFailed = false
   let videoOpen = false
@@ -325,25 +319,10 @@
     resetInteraction(100)
   }
 
-  $: renderKey = createCardFaceImageCacheKey(card, faceTheme, playerImage, cardMeta)
-
-  $: if (mounted && renderKey && renderKey !== renderedKey) {
-    const currentRenderKey = renderKey
-    renderedKey = currentRenderKey
-    faceImageUrl = ''
+  $: if (faceImageUrl !== (faceImage ?? '')) {
+    faceImageUrl = faceImage ?? ''
     faceImageFailed = false
-    renderCardFaceImage(card, effectTheme, faceTheme, playerImage, cardMeta)
-      .then((url) => {
-        if (renderedKey === currentRenderKey) faceImageUrl = url
-      })
-      .catch(() => {
-        if (renderedKey === currentRenderKey) faceImageFailed = true
-      })
   }
-
-  onMount(() => {
-    mounted = true
-  })
 </script>
 
 <svelte:window
@@ -417,8 +396,13 @@
       on:keydown={handleKeydown}
     >
       <div class="card__front">
-        {#if faceImageUrl}
-          <img class="card-face-image" src={faceImageUrl} alt={`${card.playerName} ${faceTheme.name} card face`} />
+        {#if faceImageUrl && !faceImageFailed}
+          <img
+            class="card-face-image"
+            src={faceImageUrl}
+            alt={`${card.playerName} ${faceTheme.name} card face`}
+            on:error={() => (faceImageFailed = true)}
+          />
         {:else}
           <div class="card-face-placeholder" aria-hidden="true"></div>
         {/if}

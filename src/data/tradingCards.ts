@@ -2,6 +2,7 @@ import cardDefinitionsJson from './cards/cards.json'
 import { cardEffects } from './cardEffects'
 import { cardFaceThemes } from './cardFaceThemes'
 import { playerCards } from './playerCards'
+import { cardFaceImages } from '../generated/cardFaces'
 import type {
   CardDefinition,
   CardFacePlayerImage,
@@ -39,6 +40,7 @@ function resolveTradingCard(definition: CardDefinition): ResolvedTradingCard {
     name: definition.name,
     specialType: definition.specialType ?? 'basic',
     video: definition.video?.trim() || undefined,
+    faceImage: cardFaceImages[definition.id],
     player: resolvedPlayer,
     faceTheme,
     effectTheme,

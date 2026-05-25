@@ -9,6 +9,8 @@
 - 전체 카드 목록은 `src/data/cards/cards.json` 단일 파일에서 관리한다.
 - 선수 원본 데이터는 `src/data/players/{season}-{playerName}-{kitNumber}.json`에 둔다.
 - `src/data/tradingCards.ts`가 카드 정의, 선수 데이터, face theme을 조합해 렌더링용 카드 목록을 만든다.
+- `npm run generate:card-faces`가 이 목록의 모든 카드 앞면을 `public/generated/card-faces/*.png`로 미리 렌더링한다.
+- `src/generated/cardFaces.ts`는 생성된 이미지 경로 매핑이며 빌드 때 자동 갱신된다.
 - 홈페이지는 이 목록의 카드들을 각각의 기본 `effectThemeId`로 렌더링한다.
 - face theme은 카드의 시각 레이아웃만 담당하고, `specialType`과 독립이다.
 
@@ -69,3 +71,4 @@
 - `effectThemeId`가 실제 effect theme id와 일치하는가?
 - 카드별 이미지가 로컬 정적 에셋으로 존재하는가?
 - `statModifiers` 값이 절대값이 아니라 delta로 작성되어 있는가?
+- `npm run generate:card-faces` 또는 `npm run build`로 생성 이미지가 갱신됐는가?

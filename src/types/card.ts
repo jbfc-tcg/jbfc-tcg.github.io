@@ -71,6 +71,7 @@ export type ResolvedTradingCard = {
   name: string
   specialType: SpecialCardType
   video?: string
+  faceImage?: string
   player: PlayerCard
   faceTheme: CardFaceTheme
   effectTheme: CardEffectTheme

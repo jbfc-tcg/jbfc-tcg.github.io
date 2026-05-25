@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card Face Generator</title>
+  </head>
+  <body>
+    <div id="status">Ready</div>
+    <script type="module">
+      import { renderCardFaceImage } from '/src/renderers/cardFaceRenderer.ts'
+      import { formatSpecialType, tradingCards } from '/src/data/tradingCards.ts'
+
+      async function toDataUrl(url) {
+        if (url.startsWith('data:')) return url
+
+        const response = await fetch(url)
+        const blob = await response.blob()
+
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.addEventListener('load', () => resolve(reader.result))
+          reader.addEventListener('error', () => reject(reader.error))
+          reader.readAsDataURL(blob)
+        })
+      }
+
+      window.__renderCardFaces = async () => {
+        const status = document.getElementById('status')
+        const results = []
+
+        for (const tradingCard of tradingCards) {
+          status.textContent = `Rendering ${tradingCard.id}`
+
+          const objectUrl = await renderCardFaceImage(
+            tradingCard.player,
+            tradingCard.effectTheme,
+            tradingCard.faceTheme,
+            tradingCard.playerImage,
+            {
+              name: tradingCard.name,
+              specialType: tradingCard.specialType,
+              specialTypeLabel: formatSpecialType(tradingCard.specialType),
+              video: tradingCard.video,
+            },
+          )
+
+          results.push({
+            id: tradingCard.id,
+            dataUrl: await toDataUrl(objectUrl),
+          })
+
+          if (objectUrl.startsWith('blob:')) URL.revokeObjectURL(objectUrl)
+        }
+
+        status.textContent = 'Done'
+        return results
+      }
+    </script>
+  </body>
+</html>
