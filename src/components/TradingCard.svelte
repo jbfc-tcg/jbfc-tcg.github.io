@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import { spring } from 'svelte/motion'
 
   import CardBack from './CardBack.svelte'
@@ -35,6 +36,9 @@
   let faceImageUrl = ''
   let faceImageFailed = false
   let videoOpen = false
+  let isCompactViewport = false
+  let rotateX = 0
+  let rotateY = 0
 
   const interactSpring = { stiffness: 0.066, damping: 0.25 }
   const popoverSpring = { stiffness: 0.033, damping: 0.45 }
@@ -57,6 +61,9 @@
   $: videoUrl = cardMeta.video
   $: videoEmbedUrl = videoUrl ? toYouTubeEmbedUrl(videoUrl) : ''
   $: VideoButtonComponent = faceTheme.videoButtonComponent
+  $: tiltDisabled = isCompactViewport && !expanded
+  $: rotateX = tiltDisabled ? 0 : $springRotate.x + $springRotateDelta.x
+  $: rotateY = tiltDisabled ? 0 : $springRotate.y + $springRotateDelta.y
 
   $: themeStyle = [
     '--card-surface: #00523d',
@@ -76,8 +83,8 @@
     `--pointer-from-top: ${$springPointer.y}`,
     `--pointer-from-left: ${$springPointer.x}`,
     `--card-opacity: ${$springGlare.o}`,
-    `--rotate-x: ${$springRotate.x + $springRotateDelta.x}deg`,
-    `--rotate-y: ${$springRotate.y + $springRotateDelta.y}deg`,
+    `--rotate-x: ${rotateX}deg`,
+    `--rotate-y: ${rotateY}deg`,
     `--translate-x: ${$springTranslate.x}px`,
     `--translate-y: ${$springTranslate.y}px`,
     `--card-scale: ${$springScale}`,
@@ -91,14 +98,14 @@
     `--clip-trainer-invert: ${faceTheme.effectSurface.clipTrainerInvert}`,
   ].join('; ')
 
-  $: if (typeof window !== 'undefined') {
-    reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  $: {
+    const yRotation = normalizeAngle(rotateX)
+    isBackVisible = !tiltDisabled && yRotation > 90 && yRotation < 270
   }
 
-  $: {
-    const yRotation = normalizeAngle($springRotate.x + $springRotateDelta.x)
-    isBackVisible = yRotation > 90 && yRotation < 270
-  }
+  onMount(() => {
+    updateViewportSettings()
+  })
 
   function setSpringSettings(settings: { stiffness: number; damping: number }) {
     springRotate.stiffness = settings.stiffness
@@ -120,6 +127,16 @@
       springPointer.set({ x: 0.5, y: 0.5, center: 0 }, { soft: 1 })
       interacting = false
     }, delay)
+  }
+
+  function updateViewportSettings() {
+    reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    isCompactViewport = window.matchMedia('(max-width: 880px)').matches
+
+    if (isCompactViewport && !expanded) {
+      springRotate.set({ x: 0, y: 0 }, { hard: true })
+      springRotateDelta.set({ x: 0, y: 0 }, { hard: true })
+    }
   }
 
   function getExpandedWidth(rect: DOMRect) {
@@ -230,7 +247,7 @@
   }
 
   function updatePointer(event: PointerEvent) {
-    if (interactionDisabled) return
+    if (interactionDisabled || tiltDisabled) return
 
     const bounds = cardTranslater.getBoundingClientRect()
     const percentX = clamp(round(((event.clientX - bounds.left) / bounds.width) * 100))
@@ -299,6 +316,8 @@
   }
 
   function handleResize() {
+    updateViewportSettings()
+
     if (expanded) {
       const rect = cardShell.getBoundingClientRect()
       springScale.set(getExpandedWidth(rect) / rect.width)

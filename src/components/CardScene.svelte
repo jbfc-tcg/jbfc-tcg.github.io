@@ -40,9 +40,4 @@
       </article>
     {/each}
   </section>
-
-  <footer class="sources">
-    <span>Profile: Jeonbuk Hyundai Motors FC</span>
-    <span>Stats: K LEAGUE Dynamic Point</span>
-  </footer>
 </main>
